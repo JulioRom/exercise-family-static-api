@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jackson Family API</title>
+    <script>
+        async function fetchMembers() {
+            let response = await fetch('/members');
+            let data = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function fetchMember() {
+            let id = document.getElementById('memberId').value;
+            let response = await fetch(`/member/${id}`);
+            let data = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function addMember() {
+            let name = document.getElementById('firstName').value;
+            let age = document.getElementById('age').value;
+            let luckyNumbers = document.getElementById('luckyNumbers').value.split(',').map(Number);
+            
+            let response = await fetch('/member', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ first_name: name, age: Number(age), lucky_numbers: luckyNumbers })
+            });
+            let data = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function deleteMember() {
+            let id = document.getElementById('deleteMemberId').value;
+            let response = await fetch(`/member/${id}`, { method: 'DELETE' });
+            let data = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h1>Jackson Family API Test</h1>
+    <button onclick="fetchMembers()">Get All Members</button>
+    <br><br>
+    
+    <input type="number" id="memberId" placeholder="Member ID">
+    <button onclick="fetchMember()">Get Member</button>
+    <br><br>
+    
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="number" id="age" placeholder="Age">
+    <input type="text" id="luckyNumbers" placeholder="Lucky Numbers (comma separated)">
+    <button onclick="addMember()">Add Member</button>
+    <br><br>
+    
+    <input type="number" id="deleteMemberId" placeholder="Member ID">
+    <button onclick="deleteMember()">Delete Member</button>
+    <br><br>
+    
+    <h2>Response:</h2>
+    <pre id="output" style="background: #f4f4f4; padding: 10px;"></pre>
+</body>
+</html>
